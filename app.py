@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'  # 请替换为安全的密钥
@@ -61,23 +62,48 @@ def book(room_id):
     if 'username' not in session:
         flash('Please login to book a room.')
         return redirect(url_for('login'))
+
     room = next((r for r in rooms if r['id'] == room_id), None)
     if not room:
         flash('Room not found!')
         return redirect(url_for('index'))
+
     if request.method == 'POST':
         booking_date = request.form.get('booking_date')
-        booking_time = request.form.get('booking_time')
+        start_time = request.form.get('start_time')
+        end_time = request.form.get('end_time')
+
+        try:
+            start_time_obj = datetime.strptime(start_time, "%H:%M")
+            end_time_obj = datetime.strptime(end_time, "%H:%M")
+        except ValueError:
+            flash("Invalid time format. Please use HH:MM format.")
+            return redirect(url_for('book', room_id=room_id))
+
+        # Ensure end time is later than start time
+        if start_time_obj >= end_time_obj:
+            flash('End time must be later than start time.')
+            return redirect(url_for('book', room_id=room_id))
+
+        # Ensure booking duration does not exceed 2 hours
+        max_duration = timedelta(hours=2)
+        if end_time_obj - start_time_obj > max_duration:
+            flash('Booking duration cannot exceed 2 hours.')
+            return redirect(url_for('book', room_id=room_id))
+
+        # Store booking with start and end times
         booking = {
             'room_id': room_id,
             'room_name': room['name'],
             'username': session['username'],
             'booking_date': booking_date,
-            'booking_time': booking_time
+            'start_time': start_time,
+            'end_time': end_time
         }
         bookings.append(booking)
-        flash('Booking confirmed!')
+        flash(f'Booking confirmed from {start_time} to {end_time}!')
         return redirect(url_for('booking_result', booking_index=len(bookings) - 1))
+
     return render_template('book.html', room=room)
 
 @app.route('/booking_result/<int:booking_index>')
