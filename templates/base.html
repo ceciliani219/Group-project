@@ -2,6 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <!-- 视口设置，确保在手机端正确显示 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Breakout Room Booking{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
@@ -34,7 +36,7 @@
         </ul>
       {% endif %}
     {% endwith %}
-
+    
     {% block content %}
     {% endblock %}
   </div>

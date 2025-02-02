@@ -1,4 +1,4 @@
-/* Overall body styles */
+/* 全局样式 */
 body {
     font-family: 'Arial', sans-serif;
     background-color: #f0f0f0;
@@ -6,7 +6,7 @@ body {
     padding: 20px;
 }
 
-/* Container that holds the content */
+/* 主容器 */
 .container {
     background-color: #ffffff;
     padding: 30px;
@@ -16,7 +16,7 @@ body {
     margin: 0 auto;
 }
 
-/* Navigation bar styles */
+/* 导航栏 */
 nav {
     display: flex;
     justify-content: space-between;
@@ -31,19 +31,14 @@ nav a {
     font-weight: bold;
 }
 
-nav span {
-    margin-right: 10px;
-    color: #333;
-}
-
-/* Headings */
+/* 标题 */
 h2 {
     font-size: 28px;
     margin-bottom: 20px;
     color: #333;
 }
 
-/* Form styling */
+/* 表单样式 */
 form {
     margin: 15px 0;
     text-align: left;
@@ -67,7 +62,7 @@ form input[type="time"] {
     font-size: 16px;
 }
 
-/* Submit buttons and general buttons */
+/* 按钮样式 */
 input[type="submit"], button {
     background-color: #007bff;
     color: white;
@@ -86,7 +81,7 @@ input[type="submit"]:hover, button:hover {
     background-color: #0056b3;
 }
 
-/* Link styling */
+/* 链接样式 */
 a {
     color: #007bff;
     text-decoration: none;
@@ -96,7 +91,7 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Flash messages */
+/* 闪现消息 */
 .flashes {
     list-style: none;
     padding: 0;
@@ -111,23 +106,29 @@ a:hover {
     color: #333;
 }
 
-/* Responsive design */
+/* 响应式设计 */
 @media (max-width: 768px) {
-    .container {
-        padding: 20px;
+    body {
+        font-size: 18px; /* 调整手机端整体字体大小 */
+        padding-top: 40px; /* 为内容与屏幕顶部留出空间 */
     }
-
+    
+    .container {
+        max-width: 90%;
+        margin: 20px auto;
+    }
+    
     h2 {
         font-size: 24px;
     }
-
+    
     form input[type="text"],
     form input[type="password"],
     form input[type="date"],
     form input[type="time"] {
-        font-size: 14px;
+        font-size: 16px;
     }
-
+    
     input[type="submit"], button {
         font-size: 16px;
     }
