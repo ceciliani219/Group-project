@@ -4,7 +4,11 @@
 
 {% block content %}
 <h2>Booking Confirmation</h2>
-<p>Your booking has been confirmed.</p>
+<p>Room: {{ booking.room_name }}</p>
+<p>Date: {{ booking.booking_date }}</p>
+<p>Time: {{ booking.start_time }} - {{ booking.end_time }}</p>
+<p>Booked by: {{ booking.username }}</p>
+<a href="{{ url_for('index') }}">Back to Home</a>
 <ul>
   <li>Room: {{ booking.room_name }}</li>
   <li>Booked by: {{ booking.username }}</li>
