@@ -4,14 +4,18 @@
 
 {% block content %}
 <h2>Register</h2>
-<form method="post">
-  <label for="username">Username:</label>
-  <input type="text" name="username" id="username" required>
-  
-  <label for="password">Password:</label>
-  <input type="password" name="password" id="password" required>
-  
-  <input type="submit" value="Register">
+<form method="POST">
+  <label for="username">Username (1-10 letters/numbers):</label>
+  <input type="text" id="username" name="username" required 
+         pattern="[A-Za-z0-9]{1,10}"
+         title="Username must be 1-10 characters long and contain only letters and numbers.">
+
+  <label for="password">Password (8-16 chars, 1 uppercase letter, only letters/numbers):</label>
+  <input type="password" id="password" name="password" required 
+         pattern="(?=.*[A-Z])[A-Za-z0-9]{8,16}"
+         title="Password must be 8-16 characters long, contain at least one uppercase letter, and include only letters and numbers.">
+
+  <button type="submit">Register</button>
 </form>
 {% endblock %}
 

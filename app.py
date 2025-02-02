@@ -22,18 +22,34 @@ bookings = []
 def index():
     return render_template('index.html', rooms=rooms)
 
+import re  # Import regex module
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
+
+        # Validate username: only letters & numbers, max 10 characters
+        if not re.match(r'^[a-zA-Z0-9]{1,10}$', username):
+            flash('Username must be 1-10 characters long and contain only letters and numbers.')
+            return redirect(url_for('register'))
+
+        # Validate password: 8-16 characters, at least one uppercase letter, only letters and numbers
+        if not re.match(r'^(?=.*[A-Z])[A-Za-z0-9]{8,16}$', password):
+            flash('Password must be 8-16 characters long, contain at least one uppercase letter, and include only letters and numbers.')
+            return redirect(url_for('register'))
+
         if username in users:
             flash('Username already exists! Please choose another.')
             return redirect(url_for('register'))
+
+        # Hash and store the password
         hashed_pw = generate_password_hash(password)
         users[username] = {'password': hashed_pw}
         flash('Registration successful! Please login.')
         return redirect(url_for('login'))
+
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
