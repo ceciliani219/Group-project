@@ -9,11 +9,4 @@
 <p>Time: {{ booking.start_time }} - {{ booking.end_time }}</p>
 <p>Booked by: {{ booking.username }}</p>
 <a href="{{ url_for('index') }}">Back to Home</a>
-<ul>
-  <li>Room: {{ booking.room_name }}</li>
-  <li>Booked by: {{ booking.username }}</li>
-  <li>Date: {{ booking.booking_date }}</li>
-  <li>Time: {{ booking.booking_time }}</li>
-</ul>
-<a href="{{ url_for('index') }}">Return to Home</a>
 {% endblock %}
