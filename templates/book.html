@@ -1,20 +1,65 @@
 {% extends "base.html" %}
 
-{% block title %}Book {{ room.name }} - Breakout Room Booking{% endblock %}
+{% block title %}Book Breakout Room{% endblock %}
 
 {% block content %}
 <h2>Book {{ room.name }}</h2>
+
+<style>
+    .input-field {
+        width: 100%; /* Make all input fields and dropdowns the same width */
+        padding: 12px; /* Adjust padding for consistent height */
+        font-size: 16px; /* Uniform font size */
+        border: 1px solid #ccc; /* Standardized border */
+        border-radius: 5px; /* Slightly rounded corners */
+        box-sizing: border-box; /* Prevents extra width from padding */
+        margin-bottom: 10px; /* Spacing between fields */
+        appearance: none; /* Removes default styles for dropdowns */
+    }
+
+    select.input-field {
+        background-color: white; /* Ensure dropdown background matches input */
+        cursor: pointer; /* Indicate interactivity */
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+</style>
+
 <form method="POST">
-  <label for="booking_date">Booking Date:</label>
-  <input type="date" id="booking_date" name="booking_date" required>
+    <label for="booking_date">Booking Date:</label>
+    <input type="date" id="booking_date" name="booking_date" class="input-field" required>
 
-  <label for="start_time">Start Time:</label>
-  <input type="time" id="start_time" name="start_time" required>
+    <label for="start_time">Start Time:</label>
+    <select id="start_time" name="start_time" class="input-field" required>
+        {% for hour in range(8, 22) %}
+            <option value="{{ '%02d:00' % hour }}">{{ '%02d:00' % hour }}</option>
+            <option value="{{ '%02d:30' % hour }}">{{ '%02d:30' % hour }}</option>
+        {% endfor %}
+    </select>
 
-  <label for="end_time">End Time:</label>
-  <input type="time" id="end_time" name="end_time" required>
+    <label for="end_time">End Time:</label>
+    <select id="end_time" name="end_time" class="input-field" required>
+        {% for hour in range(8, 23) %}
+            <option value="{{ '%02d:00' % hour }}">{{ '%02d:00' % hour }}</option>
+            <option value="{{ '%02d:30' % hour }}">{{ '%02d:30' % hour }}</option>
+        {% endfor %}
+    </select>
 
-  <button type="submit">Confirm Booking</button>
+    <button type="submit">Confirm Booking</button>
 </form>
-{% endblock %}
 
+<p><a href="{{ url_for('index') }}">Back to Home</a></p>
+{% endblock %}
