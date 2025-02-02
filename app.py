@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
-import re  # Import regex module
+import re  # 用于正则验证
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'  # 请替换为安全的密钥
 
 # 模拟用户存储（实际应使用数据库）
+# 格式：{'username': {'password': hashed_password, 'email': user_email}}
 users = {}
 
 # 模拟房间数据
@@ -27,14 +28,20 @@ def index():
 def register():
     if request.method == 'POST':
         username = request.form.get('username')
+        email = request.form.get('email')
         password = request.form.get('password')
 
-        # Validate username: only letters & numbers, max 10 characters
+        # 验证用户名：仅允许字母和数字，长度 1-10
         if not re.match(r'^[a-zA-Z0-9]{1,10}$', username):
             flash('Username must be 1-10 characters long and contain only letters and numbers.')
             return redirect(url_for('register'))
 
-        # Validate password: 8-16 characters, at least one uppercase letter, only letters and numbers
+        # 验证邮箱格式
+        if not re.match(r'^[^@]+@[^@]+\.[^@]+$', email):
+            flash('Invalid email format.')
+            return redirect(url_for('register'))
+
+        # 验证密码：8-16个字符，至少一个大写字母，只允许字母和数字
         if not re.match(r'^(?=.*[A-Z])[A-Za-z0-9]{8,16}$', password):
             flash('Password must be 8-16 characters long, contain at least one uppercase letter, and include only letters and numbers.')
             return redirect(url_for('register'))
@@ -43,9 +50,9 @@ def register():
             flash('Username already exists! Please choose another.')
             return redirect(url_for('register'))
 
-        # Hash and store the password
+        # 哈希处理密码并存储用户信息
         hashed_pw = generate_password_hash(password)
-        users[username] = {'password': hashed_pw}
+        users[username] = {'password': hashed_pw, 'email': email}
         flash('Registration successful! Please login.')
         return redirect(url_for('login'))
 
@@ -68,10 +75,29 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.clear()
-    print("Session after logout:", session)  # 调试输出
+    session.clear()  # 清除所有 session 数据
     flash('You have been logged out.')
     return redirect(url_for('index'))
+
+@app.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        new_password = request.form.get('new_password')
+
+        # 验证用户是否存在且邮箱匹配
+        if username not in users or users[username]['email'] != email:
+            flash('Invalid username or email.')
+            return redirect(url_for('forgot_password'))
+
+        # 更新密码
+        hashed_pw = generate_password_hash(new_password)
+        users[username]['password'] = hashed_pw
+        flash('Password has been reset. Please login.')
+        return redirect(url_for('login'))
+
+    return render_template('forgot_password.html')
 
 @app.route('/book/<int:room_id>', methods=['GET', 'POST'])
 def book(room_id):
@@ -96,19 +122,18 @@ def book(room_id):
             flash("Invalid time format. Please use HH:MM format.")
             return redirect(url_for('book', room_id=room_id))
 
-        # Ensure end time is later than start time
+        # 确保结束时间晚于开始时间
         if start_time_obj >= end_time_obj:
             flash('End time must be later than start time.')
             return redirect(url_for('book', room_id=room_id))
 
-        # Ensure booking duration does not exceed 2 hours
+        # 限制预约时长不超过2小时
         max_duration = timedelta(hours=2)
         if end_time_obj - start_time_obj > max_duration:
             flash('Booking duration cannot exceed 2 hours.')
             return redirect(url_for('book', room_id=room_id))
 
-        # 新增冲突检测逻辑：
-        # 检查同一房间、同一天是否已经有预约且时间段冲突
+        # 冲突检测：检查同一房间、同一天是否已有重叠预约
         for existing in bookings:
             if (
                 existing['room_id'] == room_id and
@@ -119,7 +144,7 @@ def book(room_id):
                 flash('This room is already booked for the selected time slot. Please choose a different time.')
                 return redirect(url_for('book', room_id=room_id))
 
-        # Store booking with start and end times
+        # 存储预约信息
         booking = {
             'room_id': room_id,
             'room_name': room['name'],

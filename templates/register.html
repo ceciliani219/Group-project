@@ -4,17 +4,52 @@
 
 {% block content %}
 <h2>Register</h2>
-<form method="POST">
-  <label for="username">Username (1-10 letters/numbers):</label>
-  <input type="text" name="username" id="username" required autocomplete="off"
-         pattern="[A-Za-z0-9]{1,10}"
-         title="Username must be 1-10 characters long and contain only letters and numbers.">
 
-  <label for="password">Password (8-16 chars, at least 1 uppercase letter, only letters/numbers):</label>
-  <input type="password" id="password" name="password" required 
-         pattern="(?=.*[A-Z])[A-Za-z0-9]{8,16}"
-         title="Password must be 8-16 characters long, contain at least one uppercase letter, and include only letters and numbers.">
+<style>
+    .input-field {
+        width: 100%; /* 所有输入框宽度一致 */
+        padding: 10px; /* 增加内边距使其更美观 */
+        font-size: 16px; /* 字体大小一致 */
+        border: 1px solid #ccc; /* 统一边框样式 */
+        border-radius: 5px; /* 圆角效果 */
+        box-sizing: border-box; /* 包含内边距在内的宽度计算 */
+        margin-bottom: 10px; /* 输入框之间的间隔 */
+    }
 
-  <button type="submit">Register</button>
+    button {
+        width: 100%; /* 按钮宽度与输入框一致 */
+        padding: 10px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<form method="post">
+    <label for="username">Username (1-10 letters/numbers):</label>
+    <input type="text" id="username" name="username" class="input-field" required
+           pattern="[A-Za-z0-9]{1,10}"
+           title="Username must be 1-10 characters long and contain only letters and numbers.">
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" class="input-field" required
+           pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+           title="Enter a valid email address.">
+
+    <label for="password">Password (8-16 chars, at least 1 uppercase letter, only letters/numbers):</label>
+    <input type="password" id="password" name="password" class="input-field" required
+           pattern="(?=.*[A-Z])[A-Za-z0-9]{8,16}"
+           title="Password must be 8-16 characters long, contain at least one uppercase letter, and include only letters and numbers.">
+
+    <button type="submit">Register</button>
 </form>
+
+<p><a href="{{ url_for('login') }}">Already have an account? Login here</a></p>
 {% endblock %}

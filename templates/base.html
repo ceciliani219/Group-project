@@ -4,6 +4,10 @@
   <meta charset="utf-8">
   <!-- 视口设置，确保在手机端正确显示 -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 防止浏览器缓存 -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>{% block title %}Breakout Room Booking{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
