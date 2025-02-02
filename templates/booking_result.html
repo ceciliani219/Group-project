@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>预约确认</title>
+</head>
+<body>
+    <h1>预约成功！</h1>
+    <p>房间：{{ booking.room_name }}</p>
+    <p>预约人：{{ booking.user_name }}</p>
+    <p>预约日期：{{ booking.booking_date }}</p>
+    <p>预约时间：{{ booking.booking_time }}</p>
+    <p>
+        <a href="{{ url_for('index') }}">返回房间列表</a>
+    </p>
+</body>
+</html>

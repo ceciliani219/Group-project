@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>所有预约记录</title>
+</head>
+<body>
+    <h1>所有预约记录</h1>
+    <ul>
+        {% for booking in bookings %}
+        <li>
+            房间：{{ booking.room_name }} &nbsp;
+            预约人：{{ booking.user_name }} &nbsp;
+            日期：{{ booking.booking_date }} &nbsp;
+            时间：{{ booking.booking_time }}
+        </li>
+        {% endfor %}
+    </ul>
+    <p>
+        <a href="{{ url_for('index') }}">返回房间列表</a>
+    </p>
+</body>
+</html>

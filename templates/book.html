@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>预约 {{ room.name }}</title>
+</head>
+<body>
+    <h1>预约 {{ room.name }}</h1>
+    <form method="post">
+        <p>
+            <label>您的姓名：</label>
+            <input type="text" name="user_name" required>
+        </p>
+        <p>
+            <label>预约日期：</label>
+            <input type="date" name="booking_date" required>
+        </p>
+        <p>
+            <label>预约时间：</label>
+            <input type="time" name="booking_time" required>
+        </p>
+        <p>
+            <input type="submit" value="提交预约">
+        </p>
+    </form>
+    <p>
+        <a href="{{ url_for('index') }}">返回房间列表</a>
+    </p>
+</body>
+</html>
