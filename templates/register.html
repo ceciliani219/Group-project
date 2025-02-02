@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Breakout Room Booking{% endblock %}
+
+{% block content %}
+<h2>Register</h2>
+<form method="post">
+  <label for="username">Username:</label>
+  <input type="text" name="username" id="username" required>
+  
+  <label for="password">Password:</label>
+  <input type="password" name="password" id="password" required>
+  
+  <input type="submit" value="Register">
+</form>
+{% endblock %}

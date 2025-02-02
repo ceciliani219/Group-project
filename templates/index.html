@@ -1,22 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Breakout Room 预约系统</title>
-</head>
-<body>
-    <h1>可预约的 Breakout Room</h1>
-    <ul>
-        {% for room in rooms %}
-        <li>
-            {{ room.name }} (容纳人数：{{ room.capacity }})
-            <!-- 点击进入预约页面 -->
-            <a href="{{ url_for('book', room_id=room.id) }}">立即预约</a>
-        </li>
-        {% endfor %}
-    </ul>
-    <p>
-        <a href="{{ url_for('list_bookings') }}">查看所有预约记录</a>
-    </p>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Home - Breakout Room Booking{% endblock %}
+
+{% block content %}
+<h2>Available Breakout Rooms</h2>
+<ul>
+  {% for room in rooms %}
+    <li>
+      <strong>{{ room.name }}</strong> (Capacity: {{ room.capacity }})
+      <a href="{{ url_for('book', room_id=room.id) }}">Book Now</a>
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}
+

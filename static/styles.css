@@ -1,43 +1,74 @@
+/* Overall body styles */
 body {
     font-family: 'Arial', sans-serif;
     background-color: #f0f0f0;
     margin: 0;
     padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
 }
 
+/* Container that holds the content */
 .container {
     background-color: #ffffff;
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
-.image-class {
-    max-width: 100%;  /* Ensures the image scales down responsively */
-    height: auto;     /* Maintains the aspect ratio of the image */
-    border-radius: 8px; /* Optional: Adds rounded corners */
-    margin-bottom: 20px; /* Adds space below the image */
-    display: block;
+/* Navigation bar styles */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
+nav a {
+    margin-right: 10px;
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+}
+
+nav span {
+    margin-right: 10px;
+    color: #333;
+}
+
+/* Headings */
 h2 {
-    font-size: 24px;
+    font-size: 28px;
     margin-bottom: 20px;
     color: #333;
 }
 
+/* Form styling */
 form {
     margin: 15px 0;
+    text-align: left;
 }
 
-input[type="submit"] {
+form label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+form input[type="text"],
+form input[type="password"],
+form input[type="date"],
+form input[type="time"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+
+/* Submit buttons and general buttons */
+input[type="submit"], button {
     background-color: #007bff;
     color: white;
     padding: 12px 24px;
@@ -48,48 +79,56 @@ input[type="submit"] {
     transition: background-color 0.3s ease;
     width: 100%;
     max-width: 300px;
-}
-
-input, button {
-    width: 100%;
-    padding: 10px;
     margin-top: 10px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-    font-size: 16px;
 }
 
-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-button:hover {
+input[type="submit"]:hover, button:hover {
     background-color: #0056b3;
 }
 
-p {
-    margin-top: 20px;
-    font-size: 18px;
+/* Link styling */
+a {
     color: #007bff;
+    text-decoration: none;
 }
 
+a:hover {
+    text-decoration: underline;
+}
+
+/* Flash messages */
+.flashes {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 15px 0;
+}
+
+.flashes li {
+    background-color: #ffdddd;
+    border-left: 4px solid #f44336;
+    padding: 10px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
     .container {
         padding: 20px;
     }
 
     h2 {
-        font-size: 20px;
+        font-size: 24px;
     }
 
-    input, button {
+    form input[type="text"],
+    form input[type="password"],
+    form input[type="date"],
+    form input[type="time"] {
         font-size: 14px;
     }
 
-    p {
+    input[type="submit"], button {
         font-size: 16px;
     }
 }
