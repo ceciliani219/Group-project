@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
+import re  # Import regex module
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'  # 请替换为安全的密钥
@@ -22,28 +23,15 @@ bookings = []
 def index():
     return render_template('index.html', rooms=rooms)
 
-import re  # Import regex module
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        email = request.form.get('email')  # Get email input
 
         # Validate username: only letters & numbers, max 10 characters
         if not re.match(r'^[a-zA-Z0-9]{1,10}$', username):
             flash('Username must be 1-10 characters long and contain only letters and numbers.')
-            return redirect(url_for('register'))
-
-        # Ensure username is unique
-        if username in users:
-            flash('Username already exists! Please choose another.')
-            return redirect(url_for('register'))
-
-        # Validate email format
-        if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
-            flash('Invalid email format. Please enter a valid email address.')
             return redirect(url_for('register'))
 
         # Validate password: 8-16 characters, at least one uppercase letter, only letters and numbers
@@ -51,9 +39,13 @@ def register():
             flash('Password must be 8-16 characters long, contain at least one uppercase letter, and include only letters and numbers.')
             return redirect(url_for('register'))
 
-        # Hash and store the password with email
+        if username in users:
+            flash('Username already exists! Please choose another.')
+            return redirect(url_for('register'))
+
+        # Hash and store the password
         hashed_pw = generate_password_hash(password)
-        users[username] = {'password': hashed_pw, 'email': email}  # Store email
+        users[username] = {'password': hashed_pw}
         flash('Registration successful! Please login.')
         return redirect(url_for('login'))
 
@@ -74,39 +66,10 @@ def login():
             return redirect(url_for('login'))
     return render_template('login.html')
 
-@app.route('/forgot_password', methods=['GET', 'POST'])
-def forgot_password():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        email = request.form.get('email')  # Get email input
-        new_password = request.form.get('new_password')
-
-        # Check if the user exists
-        if username not in users:
-            flash('Username not found. Please check your username and try again.')
-            return redirect(url_for('forgot_password'))
-
-        # Check if the email matches the one stored for the user
-        if users[username]['email'] != email:
-            flash('Email does not match our records. Please try again.')
-            return redirect(url_for('forgot_password'))
-
-        # Validate new password: 8-16 characters, at least one uppercase letter, only letters and numbers
-        if not re.match(r'^(?=.*[A-Z])[A-Za-z0-9]{8,16}$', new_password):
-            flash('Password must be 8-16 characters long, contain at least one uppercase letter, and include only letters and numbers.')
-            return redirect(url_for('forgot_password'))
-
-        # Update the password securely
-        hashed_pw = generate_password_hash(new_password)
-        users[username]['password'] = hashed_pw
-        flash('Password reset successful! You can now log in with your new password.')
-        return redirect(url_for('login'))
-
-    return render_template('forgot_password.html')
-
 @app.route('/logout')
 def logout():
-    session.pop('username', None)
+    session.clear()
+    print("Session after logout:", session)  # 调试输出
     flash('You have been logged out.')
     return redirect(url_for('index'))
 
@@ -143,6 +106,18 @@ def book(room_id):
         if end_time_obj - start_time_obj > max_duration:
             flash('Booking duration cannot exceed 2 hours.')
             return redirect(url_for('book', room_id=room_id))
+
+        # 新增冲突检测逻辑：
+        # 检查同一房间、同一天是否已经有预约且时间段冲突
+        for existing in bookings:
+            if (
+                existing['room_id'] == room_id and
+                existing['booking_date'] == booking_date and
+                not (end_time_obj <= datetime.strptime(existing['start_time'], "%H:%M") or 
+                     start_time_obj >= datetime.strptime(existing['end_time'], "%H:%M"))
+            ):
+                flash('This room is already booked for the selected time slot. Please choose a different time.')
+                return redirect(url_for('book', room_id=room_id))
 
         # Store booking with start and end times
         booking = {
