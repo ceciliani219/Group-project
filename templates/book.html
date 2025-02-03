@@ -7,19 +7,19 @@
 
 <style>
     .input-field {
-        width: 100%; /* Make all input fields and dropdowns the same width */
-        padding: 12px; /* Adjust padding for consistent height */
-        font-size: 16px; /* Uniform font size */
-        border: 1px solid #ccc; /* Standardized border */
-        border-radius: 5px; /* Slightly rounded corners */
-        box-sizing: border-box; /* Prevents extra width from padding */
-        margin-bottom: 10px; /* Spacing between fields */
-        appearance: none; /* Removes default styles for dropdowns */
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+        appearance: none;
     }
 
     select.input-field {
-        background-color: white; /* Ensure dropdown background matches input */
-        cursor: pointer; /* Indicate interactivity */
+        background-color: white;
+        cursor: pointer;
     }
 
     button {
@@ -36,17 +36,7 @@
     button:hover {
         background-color: #0056b3;
     }
-
-    .warning {
-        color: red;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
 </style>
-
-{% if booking_conflict %}
-<p class="warning">⚠️ You already have a booking at this time. Please select a different time slot.</p>
-{% endif %}
 
 <form method="POST">
     <label for="booking_date">Booking Date:</label>
@@ -74,10 +64,35 @@
 <p><a href="{{ url_for('index') }}">Back to Home</a></p>
 
 <script>
-    // Disable past dates dynamically
-    document.addEventListener("DOMContentLoaded", function () {
-        var today = new Date().toISOString().split("T")[0];
-        document.getElementById("booking_date").setAttribute("min", today);
+    // Disable past dates
+    document.getElementById("booking_date").setAttribute("min", new Date().toISOString().split('T')[0]);
+
+    // Prevent selecting past times on the same day
+    document.getElementById("booking_date").addEventListener("change", function() {
+        let selectedDate = new Date(this.value);
+        let today = new Date();
+        let currentHour = today.getHours();
+        let currentMinutes = today.getMinutes();
+        let currentTime = `${currentHour}:${currentMinutes < 10 ? '0' : ''}${currentMinutes}`;
+        
+        let startTimeDropdown = document.getElementById("start_time");
+        
+        // If today is selected, filter out past times
+        if (selectedDate.toDateString() === today.toDateString()) {
+            for (let option of startTimeDropdown.options) {
+                if (option.value < currentTime) {
+                    option.disabled = true;
+                } else {
+                    option.disabled = false;
+                }
+            }
+        } else {
+            // Enable all options if future dates are selected
+            for (let option of startTimeDropdown.options) {
+                option.disabled = false;
+            }
+        }
     });
 </script>
+
 {% endblock %}
