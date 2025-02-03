@@ -144,22 +144,24 @@ def book(room_id):
 
         # Limit booking duration to a maximum of 2 hours
         max_duration = timedelta(hours=2)
+        # Combine today's date with the times for a proper duration comparison
         if datetime.combine(today, end_time_obj) - datetime.combine(today, start_time_obj) > max_duration:
             flash('Booking duration cannot exceed 2 hours.')
             return redirect(url_for('book', room_id=room_id))
 
-        # Conflict detection: check if the user already has a booking at the same time
+        # Conflict detection: Check if the same room is already booked during the requested time slot,
+        # regardless of the booking user.
         for existing in bookings:
             if (
-                existing['username'] == session['username'] and
+                existing['room_id'] == room_id and
                 existing['booking_date'] == booking_date and
                 not (end_time_obj <= datetime.strptime(existing['start_time'], "%H:%M").time() or 
                      start_time_obj >= datetime.strptime(existing['end_time'], "%H:%M").time())
             ):
-                flash('You already have a booking at this time. Please choose a different time.')
+                flash('This room is already booked for the selected time slot. Please choose a different time.')
                 return redirect(url_for('book', room_id=room_id))
 
-        # Store booking information
+        # Store booking information if no conflicts are found
         booking = {
             'room_id': room_id,
             'room_name': room['name'],
