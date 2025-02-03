@@ -1,18 +1,18 @@
-/* 全局样式 */
+/* Global styles */
 body {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Playfair Display', serif;  /* Use the Google Font */
     background-image: url('background.png');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
-    color: #2C2A28; /* 深木色，适用于正文文本 */
+    color: #2C2A28; /* Dark wood color for text */
     margin: 0;
     padding: 20px;
 }
 
-/* 主容器 */
+/* Main container */
 .container {
-    background-color: rgba(255, 255, 255, 0.85); /* 米白色，带透明度，保证可读性 */
+    background-color: rgba(255, 255, 255, 0.85); /* Off-white with transparency for readability */
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
@@ -20,7 +20,7 @@ body {
     margin: 0 auto;
 }
 
-/* 导航栏 */
+/* Navigation */
 nav {
     display: flex;
     justify-content: space-between;
@@ -31,22 +31,22 @@ nav {
 nav a {
     margin-right: 10px;
     text-decoration: none;
-    color: #387A50; /* 柔和绿色 */
+    color: #387A50; /* Soft green */
     font-weight: bold;
 }
 
 nav a:hover {
-    color: #1E4B34; /* 深一点的绿色 */
+    color: #1E4B34; /* A deeper green */
 }
 
-/* 标题 */
+/* Headings */
 h2 {
     font-size: 30px;
     margin-bottom: 20px;
-    color: #5C3B1E; /* 深木色 */
+    color: #5C3B1E; /* Dark wood color */
 }
 
-/* 表单样式 */
+/* Form styles */
 form {
     margin: 15px 0;
     text-align: left;
@@ -55,25 +55,26 @@ form {
 form label {
     display: block;
     margin-bottom: 5px;
-    color: #4A4036; /* 适中的深木色 */
+    color: #4A4036; /* Medium dark wood color */
 }
 
 form input[type="text"],
 form input[type="password"],
 form input[type="date"],
-form input[type="time"] {
+form input[type="time"],
+form input[type="email"] {
     width: 100%;
     padding: 12px;
     margin-bottom: 15px;
     border-radius: 6px;
-    border: 1px solid #A7A5A3; /* 柔和的浅灰色边框 */
+    border: 1px solid #A7A5A3; /* Soft light gray border */
     background-color: rgba(255, 255, 255, 0.9);
     font-size: 16px;
 }
 
-/* 按钮样式 */
+/* Button styles */
 input[type="submit"], button {
-    background-color: #5C3B1E; /* 深木色 */
+    background-color: #5C3B1E; /* Dark wood color */
     color: white;
     padding: 12px 24px;
     border: none;
@@ -87,21 +88,21 @@ input[type="submit"], button {
 }
 
 input[type="submit"]:hover, button:hover {
-    background-color: #3E2814; /* 更深的木色 */
+    background-color: #3E2814; /* Even darker wood color */
 }
 
-/* 链接样式 */
+/* Link styles */
 a {
-    color: #387A50; /* 柔和绿色 */
+    color: #387A50; /* Soft green */
     text-decoration: none;
 }
 
 a:hover {
     text-decoration: underline;
-    color: #1E4B34; /* 深一点的绿色 */
+    color: #1E4B34; /* A deeper green */
 }
 
-/* 闪现消息 */
+/* Flash messages */
 .flashes {
     list-style: none;
     padding: 0;
@@ -109,18 +110,18 @@ a:hover {
 }
 
 .flashes li {
-    background-color: #FFF3E0; /* 柔和的米白色背景 */
-    border-left: 4px solid #D2691E; /* 深木色边框 */
+    background-color: #FFF3E0; /* Soft off-white background */
+    border-left: 4px solid #D2691E; /* Dark wood border */
     padding: 10px;
     margin-bottom: 10px;
     color: #5C3B1E;
 }
 
-/* 响应式设计 */
+/* Responsive design */
 @media (max-width: 768px) {
     body {
-        font-size: 18px; /* 调整手机端整体字体大小 */
-        padding-top: 40px; /* 为内容与屏幕顶部留出空间 */
+        font-size: 18px; /* Adjust overall font size on mobile */
+        padding-top: 40px; /* Give some space at the top */
     }
     
     .container {
@@ -135,11 +136,12 @@ a:hover {
     form input[type="text"],
     form input[type="password"],
     form input[type="date"],
-    form input[type="time"] {
+    form input[type="time"],
+    form input[type="email"] {
         font-size: 16px;
     }
     
     input[type="submit"], button {
         font-size: 16px;
     }
-}
+} 
