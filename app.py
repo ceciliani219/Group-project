@@ -2,9 +2,10 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 import re  # Used for regular expression validation
+import secrets  # Used for secure random key generation
 
 app = Flask(__name__)
-app.secret_key = 'AC6007_AI'  # Please replace with a secure key
+app.secret_key = secrets.token_hex(16)  # Generates a secure random secret key
 
 # Simulated user storage (a real database should be used)
 # Format: {'username': {'password': hashed_password, 'email': user_email}}
@@ -110,16 +111,25 @@ def book(room_id):
         flash('Room not found!')
         return redirect(url_for('index'))
 
+    today = datetime.now().strftime("%Y-%m-%d")  # Get today's date in YYYY-MM-DD format
+    booking_conflict = False  # Flag to indicate if a conflict exists
+
     if request.method == 'POST':
         booking_date = request.form.get('booking_date')
         start_time = request.form.get('start_time')
         end_time = request.form.get('end_time')
 
         try:
+            booking_date_obj = datetime.strptime(booking_date, "%Y-%m-%d")
             start_time_obj = datetime.strptime(start_time, "%H:%M")
             end_time_obj = datetime.strptime(end_time, "%H:%M")
         except ValueError:
-            flash("Invalid time format. Please use HH:MM format.")
+            flash("Invalid date or time format.")
+            return redirect(url_for('book', room_id=room_id))
+
+        # Prevent booking for past dates
+        if booking_date_obj.date() < datetime.now().date():
+            flash('You cannot book a room for a past date.')
             return redirect(url_for('book', room_id=room_id))
 
         # Ensure end time is later than start time
@@ -133,15 +143,16 @@ def book(room_id):
             flash('Booking duration cannot exceed 2 hours.')
             return redirect(url_for('book', room_id=room_id))
 
-        # Conflict detection: check if the same room is already booked on the same day within the selected time
+        # Conflict detection: check if the user already has a booking at the same time
         for existing in bookings:
             if (
-                existing['room_id'] == room_id and
+                existing['username'] == session['username'] and
                 existing['booking_date'] == booking_date and
                 not (end_time_obj <= datetime.strptime(existing['start_time'], "%H:%M") or 
                      start_time_obj >= datetime.strptime(existing['end_time'], "%H:%M"))
             ):
-                flash('This room is already booked for the selected time slot. Please choose a different time.')
+                booking_conflict = True
+                flash('You already have a booking at this time. Please choose a different time.')
                 return redirect(url_for('book', room_id=room_id))
 
         # Store booking information
@@ -157,7 +168,7 @@ def book(room_id):
         flash(f'Booking confirmed from {start_time} to {end_time}!')
         return redirect(url_for('booking_result', booking_index=len(bookings) - 1))
 
-    return render_template('book.html', room=room)
+    return render_template('book.html', room=room, today=today, booking_conflict=booking_conflict)
 
 @app.route('/booking_result/<int:booking_index>')
 def booking_result(booking_index):
