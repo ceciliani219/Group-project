@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import re  # Used for regular expression validation
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'  # Please replace with a secure key
+app.secret_key = 'AC6007_AI'  # Please replace with a secure key
 
 # Simulated user storage (a real database should be used)
 # Format: {'username': {'password': hashed_password, 'email': user_email}}
